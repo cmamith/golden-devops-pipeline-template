@@ -1,0 +1,52 @@
+name: pr-checks
+
+on:
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Format check (black)
+        run: black --check app tests
+
+      - name: Lint (ruff)
+        run: ruff check app tests
+
+      - name: Unit tests
+        run: pytest -q
+
+  dependency-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # OSV scanner covers many ecosystems; good "fast gate" on PRs.
+      - name: OSV dependency scan
+        uses: google/osv-scanner-action@v1
+        with:
+          scan-args: "-r ."
+
+      # Optional: python-only vuln check (kept non-blocking by default).
+      - name: pip-audit (non-blocking)
+        continue-on-error: true
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip-audit -r requirements.txt
