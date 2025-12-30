@@ -8,6 +8,27 @@ permissions:
   contents: read
 
 jobs:
+
+  # code-quality:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Set up SonarCloud Scanner
+  #       uses: sonarsource/sonarcloud-github-action@v2
+  #       with:
+  #         sonar-token: ${{ secrets.SONAR_TOKEN }} 
+  #         project-key: your_project_key
+  #         organization: your_organization
+  #         scanner-version: "4.7.0.2747"
+  #         extra-properties: |
+  #           sonar.sources=app,tests
+  #           sonar.tests=tests
+  #           sonar.python.coverage.reportPaths=coverage.xml
+  #           sonar.python.lcov.reportPaths=lcov.info
+  #           sonar.verbose=true
+
+
   quality:
     runs-on: ubuntu-latest
     steps:
