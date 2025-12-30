@@ -18,7 +18,7 @@ jobs:
   build_scan_push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Validate required repo variables
         run: |
